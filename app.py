@@ -1,9 +1,10 @@
 from flask import Flask, request, render_template_string, session, redirect, url_for
 import sqlite3
 from datetime import datetime
+import os  # Yeni: Render ortamı için port ayarlamak
 
 app = Flask(__name__)
-app.secret_key = 'sır-gibi-bir-şifre'  # Session kullanabilmek için gerekli
+app.secret_key = 'sir-gibi-bir-sifre'  # Session için gerekli
 DB_NAME = 'example.db'
 LOG_FILE = 'query_logs.txt'
 
@@ -36,10 +37,10 @@ def init_db():
     ''')
     c.execute("DELETE FROM ogrenciler")
     c.executemany('INSERT INTO ogrenciler (ad, soyad, yas) VALUES (?, ?, ?)', [
-        ('Uğur', 'Binzat', 27),
-        ('Ayçe', 'Ölmez', 22),
-        ('Leo', 'Binzat', 2),
-        ('Atlas', 'Ölmez', 8)
+        ('Ali', 'Yilmaz', 21),
+        ('Ayse', 'Demir', 22),
+        ('Mehmet', 'Kara', 20),
+        ('Fatma', 'Celik', 23)
     ])
     conn.commit()
     conn.close()
@@ -133,4 +134,6 @@ def index():
 
 if __name__ == '__main__':
     init_db()
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))  # Render sunucusunun verdiği portu oku
+    app.run(host='0.0.0.0', port=port, debug=True)
+
